@@ -348,10 +348,11 @@ void LdLidarComponent::publishLaserScan(ldlidar::Points2D & src, double lidar_sp
     msg->range_min = _rangeMin;
     msg->range_max = _rangeMax;
     msg->angle_increment = angle_increment;
-    if (beam_size <= 1) {
+    // Calculate per-beam timing from the measured spin frequency.
+    if (beam_size <= 1 || lidar_spin_freq <= 0) {
       msg->time_increment = 0;
     } else {
-      msg->time_increment = static_cast<float>(scan_time / (double)(beam_size - 1));
+      msg->time_increment = static_cast<float>(1.0 / lidar_spin_freq / beam_size);
     }
     msg->scan_time = scan_time;
     // First fill all the data with Nan
