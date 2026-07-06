@@ -23,6 +23,7 @@
       enable_angle_crop: true # enable angle cropping (false/true)
       # Crop-Winkel sind ROHE LD06-Winkel (Grad, CW), Umrechnung: ros_angle = 360 - raw_angle.
       # robot2 nach 180-Grad-Umbau (07/2026): Saeule direkt hinter dem LiDAR
-      # (base_link -X = LiDAR-Frame -Y = ros 270 deg = raw 90 deg), 90 deg breit.
-      angle_crop_min: 45.0 # minimum raw angle for cropping
-      angle_crop_max: 135.0 # maximum raw angle for cropping
+      # (base_link -X = LiDAR-Frame -Y = ros 270 deg = raw 90 deg), 35 deg breit
+      # (in RViz verifiziert, 07/2026).
+      angle_crop_min: 72.5 # minimum raw angle for cropping
+      angle_crop_max: 107.5 # maximum raw angle for cropping
