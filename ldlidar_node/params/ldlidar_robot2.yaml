@@ -21,5 +21,8 @@
       range_min: 0.03 # Minimum distance in 'units'
       range_max: 15.0 # Maximum distance in 'units'
       enable_angle_crop: true # enable angle cropping (false/true)
-      angle_crop_min: 157.5 # minimum angle for cropping (starts in front of the lidar left - counterclockwise)
-      angle_crop_max: 247.5 # maximum angle for cropping (ends in front of the lidar right)
+      # Crop-Winkel sind ROHE LD06-Winkel (Grad, CW), Umrechnung: ros_angle = 360 - raw_angle.
+      # robot2 nach 180-Grad-Umbau (07/2026): Saeule direkt hinter dem LiDAR
+      # (base_link -X = LiDAR-Frame -Y = ros 270 deg = raw 90 deg), 90 deg breit.
+      angle_crop_min: 45.0 # minimum raw angle for cropping
+      angle_crop_max: 135.0 # maximum raw angle for cropping
