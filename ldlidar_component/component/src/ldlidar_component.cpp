@@ -325,7 +325,18 @@ void LdLidarComponent::publishLaserScan(ldlidar::Points2D & src, double lidar_sp
     beam_size = static_cast<int>(src.size());
   }
 
-  start_scan_time = this->now();
+  // Timestamp fix (07/2026): header.stamp must be the acquisition time of the
+  // FIRST beam (LaserScan convention), not the publish time of the completed
+  // rotation (~1 spin + USB latency late, i.e. ~100 ms at 10 Hz). The SDK
+  // stamps every point with system_clock nanoseconds at packet arrival
+  // (lipkg.cpp) and the assembled rotation is sorted by stamp, so
+  // src.front() is the first beam. Fall back to now() only if no point
+  // stamp is available (possible for the very first frames after startup).
+  if (!src.empty() && src.front().stamp != 0) {
+    start_scan_time = rclcpp::Time(src.front().stamp, RCL_SYSTEM_TIME);
+  } else {
+    start_scan_time = this->now();
+  }
   scan_time = (start_scan_time.seconds() - end_scan_time.seconds());
 
   if (first_scan) {

@@ -13,13 +13,13 @@
       timeout_msec: 1000 # data communication timeout in msec
 
     lidar:
-      model: 'LDLiDAR_LD19' # Model type: LDLiDAR_LD06, LDLiDAR_LD19, LDLiDAR_STL27L
+      model: 'LDLiDAR_LD06' # Model type: LDLiDAR_LD06, LDLiDAR_LD19, LDLiDAR_STL27L — robot2 hat physisch einen OKDO LD06 (Typenschild verifiziert 07/2026)
       rot_verse: 'CCW' # 'CW' -> `CLOCKWISE` / 'CCW' -> `COUNTERCLOCKWISE` [ROS STANDARD]
       units: 'M' # 'MM' -> `MILLIMETERS` / 'CM' -> `CENTIMETERS` / 'M' -> `METERS` [ROS STANDARD]
       frame_id: 'ldlidar_link' # TF frame name for the lidar
       bins: 455 # set to 0 for dinamic scan size according to rotation speed, set to a fixed value [e.g. 455] for compatibility with SLAM Toolbox
       range_min: 0.03 # Minimum distance in 'units'
-      range_max: 15.0 # Maximum distance in 'units'
+      range_max: 12.0 # Maximum distance in 'units' — LD06-Spec (12 m), vorher faelschlich der LD19-Wert 15.0
       enable_angle_crop: true # enable angle cropping (false/true)
       # Crop-Winkel sind ROHE LD06-Winkel (Grad, CW), Umrechnung: ros_angle = 360 - raw_angle.
       # robot2 nach 180-Grad-Umbau (07/2026): Saeule direkt hinter dem LiDAR

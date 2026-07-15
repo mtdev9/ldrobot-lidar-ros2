@@ -44,6 +44,7 @@ def launch_setup(context, *args, **kwargs):
     node_ns = LaunchConfiguration('node_namespace')
     node_name = LaunchConfiguration('node_name')
     container_name = LaunchConfiguration('container_name')
+    direct_scan_topic = LaunchConfiguration('direct_scan_topic')
 
     # Lidar node configuration file
     lidar_config_path = os.path.join(
@@ -56,6 +57,14 @@ def launch_setup(context, *args, **kwargs):
     node_namespace_val = node_ns.perform(context)
     node_name_val = node_name.perform(context)
     container_name_val = container_name.perform(context)
+    direct_scan_topic_val = direct_scan_topic.perform(context)
+
+    # Zeitbasis-Umbau (Paper-Studie, 07/2026): Ohne Scan-Relay muss der Treiber
+    # direkt auf /scan publizieren. Leerer Wert = kein Remap (~/scan bleibt
+    # /ldlidar_node/scan, Relay-Betrieb wie bisher).
+    scan_remappings = []
+    if direct_scan_topic_val != '':
+        scan_remappings.append(('~/scan', direct_scan_topic_val))
 
     if node_namespace_val != '':
         node_namespace_val = '/' + node_namespace_val
@@ -115,6 +124,7 @@ def launch_setup(context, *args, **kwargs):
                 # YAML files
                 lidar_config_path  # Parameters
             ],
+            remappings=scan_remappings,
             extra_arguments=[{'use_intra_process_comms': True}]
         )
 
@@ -151,6 +161,11 @@ def generate_launch_description():
                 'container_name',
                 default_value='',
                 description='Name of an exister container to load the Lidar component. If empty a new container will be created.'
+            ),
+            DeclareLaunchArgument(
+                'direct_scan_topic',
+                default_value='',
+                description='If set (e.g. /scan), remap the private ~/scan topic to this absolute topic (relay-free operation).'
             ),
             OpaqueFunction(function=launch_setup)
         ]
