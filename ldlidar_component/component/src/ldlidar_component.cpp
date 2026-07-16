@@ -503,7 +503,11 @@ void LdLidarComponent::lidarThreadFunc()
     }
     // <---- Interruption check
 
-    int nSub = count_subscribers(_scanTopic);
+    // Gate on the publisher's matched subscriptions instead of a graph lookup
+    // by name: count_subscribers() does NOT apply remappings, so with ~/scan
+    // remapped (e.g. to /scan for relay-free operation) it always returned 0
+    // and the node silently never published.
+    size_t nSub = _scanPub ? _scanPub->get_subscription_count() : 0;
     if (nSub > 0) {
       _publishing = true;
       switch (_lidar->GetLaserScanData(laser_scan_points, _readTimeOut_msec)) {
